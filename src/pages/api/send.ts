@@ -81,11 +81,19 @@ const schema = {
   }),
 };
 
+const isUtools = str => {
+  return /utools/i.test(str);
+};
+
 export default async (req: NextApiRequestCollect, res: NextApiResponse) => {
   await useCors(req, res);
 
   if (req.method === 'POST') {
-    if (!process.env.DISABLE_BOT_CHECK && isbot(req.headers['user-agent'])) {
+    if (
+      !process.env.DISABLE_BOT_CHECK &&
+      isbot(req.headers['user-agent']) &&
+      !isUtools(req.headers['user-agent'])
+    ) {
       return ok(res, { beep: 'boop' });
     }
 
